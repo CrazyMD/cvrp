@@ -29,7 +29,7 @@ def calcFitness(chromosome: list) -> float:
     chromosome.sort(key=lambda tup: tup[1])  # sort by vehicle
     randoms = [i[0] for i in chromosome]  # exract randoms from chromosome
     randomsOrder = np.array(
-        randoms).argsort().argsort()  # calc list with rank of randoms, e.g. [1,8,2] --> [0,2,3] (zero based index)
+        randoms).argsort().argsort()  # calc list with rank of randoms, e.g. [1,8,2] --> [0,2,1] (zero based index)
     randomsOrder = [i + 1 for i in randomsOrder]  # change to 1 based index
     chromosome = [(random, chromosome[1]) for random, chromosome in zip(randomsOrder, chromosome)]
     maxIndex = max([chrom[1] for chrom in chromosome])  # get number of cars
