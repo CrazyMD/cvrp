@@ -4,7 +4,7 @@ class Node:
         self.demand = demand
         self.x = x
         self.y = y
-
+        self.distances = []
 
     def __eq__(self, other):
         return self.number == other
