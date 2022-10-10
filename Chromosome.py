@@ -40,10 +40,10 @@ class Chromosome:
             passengers = 0
             for node in vehicle[1]:
                 passengers += nodes[node].demand
-                distance += nodes[node].distances[node + 1]
+                distance += nodes[node].distances[vehicle[1][vehicle[1].index(node)+1]] # next node in list
             if passengers > 100:
                 distance += 5000
             vehicle.append(distance)
             vehicle.append(passengers)
             fitness += distance
-        return distance
+        return fitness
