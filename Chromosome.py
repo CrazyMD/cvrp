@@ -1,12 +1,47 @@
+from __future__ import annotations
 import random
 import numpy as np
 
 
 class Chromosome:
 
-    def __init__(self, nodes: list):
-        self.order_randoms = [random.random() for i in range(len(nodes) - 1)]  # -1 -> do not visit depot
-        self.vehicle_randoms = [random.randint(1, 9) for i in range(len(nodes) - 1)]
+    def __init__(self, nodes: list, parent1: Chromosome, parent2: Chromosome):
+        if (parent1 == None and parent2 == None):
+            self.order_randoms = [random.random() for i in range(len(nodes) - 1)]  # -1 -> do not visit depot
+            self.vehicle_randoms = [random.randint(1, 9) for i in range(len(nodes) - 1)]
+            #self.vehicle_randoms = random.sample(list(range(1,9))*7,len(nodes)-1)
+            #print(sorted(self.vehicle_randoms))
+
+        elif (parent1 != None and parent2 != None):  # recombination
+            if True:
+                selection_randoms = [random.random() for i in range(len(nodes) - 1)]
+                child = []
+                for i in range(len(selection_randoms)):
+                    if selection_randoms[i] < 0.5:
+                        child.append((parent1.order_randoms[i], parent1.vehicle_randoms[i]))
+                    else:
+                        child.append((parent2.order_randoms[i], parent2.vehicle_randoms[i]))
+                self.order_randoms = [el[0] for el in child]
+                self.vehicle_randoms = [el[1] for el in child]
+            else:
+                crossover_index = random.randint(0, len(parent1.order_randoms))
+                self.order_randoms = parent1.order_randoms[:crossover_index] + parent2.order_randoms[crossover_index:]
+                self.vehicle_randoms = parent1.vehicle_randoms[:crossover_index] + parent2.vehicle_randoms[crossover_index:]
+
+        elif (parent1 != None and parent2 == None): #mutation (not in-place)
+            self.order_randoms = parent1.order_randoms
+            self.vehicle_randoms = parent1.vehicle_randoms
+            swap_prob = random.random()
+            for i in range(0, random.randint(1, 10)):
+                swap_index1 = random.randint(0, len(self.order_randoms)-1)
+                swap_index2 = random.randint(0, len(self.order_randoms)-1)
+                swap_index3 = random.randint(0, len(self.order_randoms) - 1)
+
+                self.order_randoms[swap_index1], self.order_randoms[swap_index2],  self.order_randoms[swap_index3] = self.order_randoms[swap_index3], self.order_randoms[swap_index1], self.order_randoms[swap_index2]
+
+                self.vehicle_randoms[swap_index1], self.vehicle_randoms[swap_index2] = self.vehicle_randoms[swap_index2], \
+                                                                                   self.vehicle_randoms[swap_index1]
+
         self.chromosome_random_code = [(node, vehicle) for node, vehicle in
                                        zip(self.order_randoms, self.vehicle_randoms)]
         self.chromosome_rank_code = self.calc_ranked_code(self.chromosome_random_code)
@@ -40,7 +75,7 @@ class Chromosome:
             passengers = 0
             for node in vehicle[1]:
                 passengers += nodes[node].demand
-                distance += nodes[node].distances[vehicle[1][vehicle[1].index(node)+1]] # next node in list
+                distance += nodes[node].distances[vehicle[1][vehicle[1].index(node) + 1]]  # next node in list
             if passengers > 100:
                 distance += 5000
             vehicle.append(distance)
