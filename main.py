@@ -21,56 +21,39 @@ for start_node in nodes:  # calc distances between nodes
 
 def roulette_selection(population: list) -> Chromosome:
     sum_fitness = sum((1 / chrom.fitness) for chrom in population)
-    #quotient = [(1 / chrom.fitness) / sum_fitness for chrom in population]
-    #index = np.random.choice(range(0, len(population)), p=quotient)  # get index of random choosen element according to roulette selection
-    #print(population[index].fitness)
+    # quotient = [(1 / chrom.fitness) / sum_fitness for chrom in population]
+    # index = np.random.choice(range(0, len(population)), p=quotient)  # get index of random choosen element according to roulette selection
+    # print(population[index].fitness)
     random_selector = random.random() * sum_fitness
     population.sort(key=lambda x: x.fitness)
     temp_sum = 0
     for each in population:
-        temp_sum += (1/each.fitness)
+        temp_sum += (1 / each.fitness)
         if temp_sum > random_selector:
-            # print(each.fitness)
+            print(each.fitness)
             return each
     #return population[index]
 
+def recombination(parent1 : Chromosome, parent2 : Chromosome) -> Chromosome
+    new_chrom = Chromosome(parent1.node_list) #node_list is same everywhere
 
-population = [Chromosome(nodes, None, None) for i in range(0, 10)]
-for i in range(0, 10000):
+
+population = [Chromosome(nodes) for i in range(0, 100)]
+for i in range(0, 100):
     pop_len = len(population)
     new_pop = []
-    #prev_best_fitness = []
     for j in range(0, pop_len):
         crossover_mutation = random.random()
-        if crossover_mutation < 0.4:
-            parent1 = roulette_selection(population)
-            parent2 = roulette_selection(population)
-            #parent1 = population[random.randint(0, len(population) - 1)]
-            #parent2 = population[random.randint(0, len(population) - 1)]
-            new_pop.append(Chromosome(nodes, parent1, parent2))
+        if crossover_mutation < 0.5:
+            print('')
         else:
-            new_pop.append(Chromosome(nodes, roulette_selection(population), None))
-        # population.sort(key=lambda x: x.fitness)
-    # population = population[:500]
+            new_pop.append(roulette_selection(population).mutation())
+
     new_pop.sort(key=lambda x: x.fitness)
     population.sort(key=lambda x: x.fitness)
     population = population[:int(pop_len / 10)]  # keep the best solutions
     population.extend(new_pop[:-int(pop_len / 10)])
-    population.sort(key=lambda x: x.fitness)
-    print("best:" + str(population[0].fitness))
-    #print("mean: " + str(sum(chrom.fitness for chrom in population) / len(population)))
-    print(population[0].vehicle_list)
-
-# population = [Chromosome(nodes) for i in range(0, 10000)]
 population.sort(key=lambda x: x.fitness)
-print(population[0].fitness)
+print("best:" + str(population[0].fitness))
+print("mean: " + str(sum(chrom.fitness for chrom in population) / len(population)))
 print(population[0].vehicle_list)
-print(population[1].fitness)
-# print(population[2].fitness)
-
-# parent1 = Chromosome(nodes, None, None)
-# parent2 = Chromosome(nodes, None, None)
-# child = Chromosome(nodes, parent1, parent2)
-# print(parent1.vehicle_list)
-# print(parent2.vehicle_list)
-# print(child.vehicle_list)
