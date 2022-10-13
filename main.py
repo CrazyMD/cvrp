@@ -1,14 +1,11 @@
 import random
 
 import pandas as pd
-import numpy as np
 from Node import Node
 from Chromosome import Chromosome
 
 input_table = pd.read_csv("data.csv", sep=';')
 input_table = input_table.drop(columns=["Unnamed: 4"])
-# print(input_table.head(5))
-# print(input_table.info())
 
 nodes = [Node(node, demand, x, y) for node, demand, x, y in
          zip(input_table['Node'], input_table['Demand'], input_table['x-coordinate'], input_table['y-coordinate'])]
@@ -39,14 +36,14 @@ population = [Chromosome(nodes, None, None) for i in range(0, 10)]
 for i in range(0, 10000):
     pop_len = len(population)
     new_pop = []
-    #prev_best_fitness = []
+    last_fitness = 1000000
     for j in range(0, pop_len):
         crossover_mutation = random.random()
-        if crossover_mutation < 0.4:
-            parent1 = roulette_selection(population)
-            parent2 = roulette_selection(population)
-            #parent1 = population[random.randint(0, len(population) - 1)]
-            #parent2 = population[random.randint(0, len(population) - 1)]
+        if crossover_mutation < 0.5:
+            #parent1 = roulette_selection(population)
+            #parent2 = roulette_selection(population)
+            parent1 = population[random.randint(0, len(population) - 1)]
+            parent2 = population[random.randint(0, len(population) - 1)]
             new_pop.append(Chromosome(nodes, parent1, parent2))
         else:
             new_pop.append(Chromosome(nodes, roulette_selection(population), None))

@@ -9,8 +9,6 @@ class Chromosome:
         if (parent1 == None and parent2 == None):
             self.order_randoms = [random.random() for i in range(len(nodes) - 1)]  # -1 -> do not visit depot
             self.vehicle_randoms = [random.randint(1, 9) for i in range(len(nodes) - 1)]
-            # self.vehicle_randoms = random.sample(list(range(1,9))*7,len(nodes)-1)
-            # print(sorted(self.vehicle_randoms))
 
         elif (parent1 != None and parent2 != None):  # recombination
             choose_method = 0.2
@@ -44,7 +42,7 @@ class Chromosome:
             self.order_randoms = parent1.order_randoms
             self.vehicle_randoms = parent1.vehicle_randoms
             swap_prob = random.random()
-            for i in range(0, random.randint(1, 15)):
+            for i in range(0, random.randint(1, 7)):
                 swap_index1 = random.randint(0, len(self.order_randoms) - 1)
                 swap_index2 = random.randint(0, len(self.order_randoms) - 1)
                 swap_index3 = random.randint(0, len(self.order_randoms) - 1)
