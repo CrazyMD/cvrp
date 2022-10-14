@@ -6,8 +6,6 @@ from Chromosome import Chromosome
 
 input_table = pd.read_csv("data.csv", sep=';')
 input_table = input_table.drop(columns=["Unnamed: 4"])
-# print(input_table.head(5))
-# print(input_table.info())
 
 nodes = [Node(node, demand, x, y) for node, demand, x, y in
          zip(input_table['Node'], input_table['Demand'], input_table['x-coordinate'], input_table['y-coordinate'])]
@@ -88,7 +86,7 @@ for i in range(0, 800):
     new_pop = []
     for j in range(0, pop_len):
         crossover_mutation = random.random()
-        if crossover_mutation < 0.3:
+        if crossover_mutation < 0.5:
             new_pop.append(recombination(roulette_selection(population), roulette_selection(population)))
         else:
             new_pop.append(roulette_selection(population).mutation())

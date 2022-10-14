@@ -43,8 +43,8 @@ class Chromosome:
         return fitness
 
     def mutation(self) -> Chromosome:
-        method = random.randint(1,2)
-        if method == 1:
+        method = random.randint(1, 3)
+        if method == 1: #swap allel
             new_chrom = Chromosome(self.node_list)
             new_chrom.order_nodes = self.order_nodes
             if self.fitness > 2000:
@@ -54,12 +54,14 @@ class Chromosome:
             for i in range(0, max_mut):
                 swap_index1 = random.randint(0, len(self.order_nodes) - 1)
                 swap_index2 = random.randint(0, len(self.order_nodes) - 1)
-                new_chrom.order_nodes[swap_index1], new_chrom.order_nodes[swap_index2] = new_chrom.order_nodes[swap_index2], \
-                                                                                         new_chrom.order_nodes[swap_index1]
+                new_chrom.order_nodes[swap_index1], new_chrom.order_nodes[swap_index2] = new_chrom.order_nodes[
+                                                                                             swap_index2], \
+                                                                                         new_chrom.order_nodes[
+                                                                                             swap_index1]
             new_chrom.vehicle_nodes = new_chrom.build_vehicle_order()
             new_chrom.fitness = new_chrom.calc_fitness()
             return new_chrom
-        if method == 2:
+        if method == 2: #insert slice on different position
             new_chrom = Chromosome(self.node_list)
             new_chrom.order_nodes = self.order_nodes
             start_idx = random.randint(0, len(new_chrom.order_nodes) - 1)
@@ -74,4 +76,15 @@ class Chromosome:
             new_chrom.vehicle_nodes = new_chrom.build_vehicle_order()
             new_chrom.fitness = new_chrom.calc_fitness()
             return new_chrom
-
+        if method == 3: # swap node on route
+            new_chrom = Chromosome(self.node_list)
+            new_chrom.order_nodes = self.order_nodes
+            new_chrom.vehicle_nodes = new_chrom.build_vehicle_order()
+            vehicle_idx = random.randint(0, len(new_chrom.vehicle_nodes) - 1)
+            swap_idx1 = random.randint(0, len(new_chrom.vehicle_nodes[vehicle_idx].node_list) - 1)
+            swap_idx2 = random.randint(0, len(new_chrom.vehicle_nodes[vehicle_idx].node_list) - 1)
+            new_chrom.vehicle_nodes[vehicle_idx].node_list[swap_idx1], new_chrom.vehicle_nodes[vehicle_idx].node_list[
+                swap_idx2] = new_chrom.vehicle_nodes[vehicle_idx].node_list[swap_idx2], \
+                             new_chrom.vehicle_nodes[vehicle_idx].node_list[swap_idx1]
+            new_chrom.fitness = new_chrom.calc_fitness()
+            return new_chrom
